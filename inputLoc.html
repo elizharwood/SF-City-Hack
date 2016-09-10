@@ -89,11 +89,17 @@
         var searchBox2 = new google.maps.places.SearchBox(input2);
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input2);
 
-        // Bias the SearchBox results towards current map's viewport.
-        // map.addListener('bounds_changed', function() {
-        //  searchBox1.setBounds(map.getBounds());
-        // });
-       
+        //Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+        searchBox1.setBounds(map.getBounds());
+        });
+        map.addListener('bounds_changed', function() {
+        searchBox2.setBounds(map.getBounds());
+        });
+
+
+
+        var places = new Array();
 
         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
@@ -102,61 +108,81 @@
           var place1 = searchBox1.getPlaces();
           var place2 = searchBox2.getPlaces();
           console.log("get places");
-        
+          locations = [];
+
 
           if (place1.length == 0 || place2.length==0) {
             return;
           }
+          var midpt = getMidpoint(place1[0].geometry.location, place2[0].geometry.location);
+          var locations = new Array();
+          locations.push(place1[0].geometry.location);
+          locations.push(midpt);
+          locations.push(place2[0].geometry.location);
 
           // Clear out the old markers.
           markers.forEach(function(marker) {
             marker.setMap(null);
           });
           markers = [];
-
+          places = [];
           // For each place, get the icon, name and location.
           var bounds = new google.maps.LatLngBounds();
-          var places = new Array();
           console.log(place1.length);
           console.log(place2.length);
           places.push(place1[0]);
+          //places.push(midpt)
           places.push(place2[0]);
+          console.log(locations.length);
 
-          places.forEach(function(place) {
-            if (!place.geometry) {
+          locations.forEach(function(loc) {
+            console.log('one');
+            console.log(loc.lat());
+            if (!loc.lat()) {
               console.log("Returned place contains no geometry");
               return;
             }
-            var icon = {
-              url: place.icon,
+
+
+            /*var icon = {
+              url: place1[0].icon,
               size: new google.maps.Size(71, 71),
               origin: new google.maps.Point(0, 0),
               anchor: new google.maps.Point(17, 34),
               scaledSize: new google.maps.Size(25, 25)
-            };
+            };*/
 
             // Create a marker for each place.
             markers.push(new google.maps.Marker({
               map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
+              //icon: icon,
+              title: place1[0].name,
+              position: loc
+
             }));
 
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
+
           });
+
+          bounds.extend(place1[0].geometry.location);
+          bounds.extend(place2[0].geometry.location);
+            
           map.fitBounds(bounds);
+
+          //get midpoint of two locations
+
         });
 
 
 
         
 
+      }
+
+      function getMidpoint(loc1, loc2){
+        var lat = (loc1.lat()+loc2.lat()) /2;
+        var lng = (loc1.lng()+loc2.lng()) /2;
+        return new google.maps.LatLng(lat,lng);
       }
 
     </script>
