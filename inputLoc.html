@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,7 +24,6 @@
         outline: none;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
       }
-
       #pac-input {
         background-color: #fff;
         font-family: Roboto;
@@ -34,21 +34,17 @@
         text-overflow: ellipsis;
         width: 300px;
       }
-
       #pac-input:focus {
         border-color: #4d90fe;
       }
-
       .pac-container {
         font-family: Roboto;
       }
-
       #type-selector {
         color: #fff;
         background-color: #4d90fe;
         padding: 5px 11px 0px 11px;
       }
-
       #type-selector label {
         font-family: Roboto;
         font-size: 13px;
@@ -63,32 +59,42 @@
     <input id="pac-input1" class="controls" type="text" placeholder="Start">
     <input id="pac-input2" class="controls" type="text" placeholder="End">
 
+<div id="interest">
+<b>Interest: </b>
+<select id="interest">
+ <option value="park">Parks</option>
+ <option value="coffee">Coffee</option>
+ <option value="food">Food</option>
+ <option value="bars">Bars</option>
+ <option value="landmark">Landmarks</option>
+</select>
+</div>
+
+
+
+
+
     <div id="map"></div>
     <script>
       // This example adds a search box to a map, using the Google Place Autocomplete
       // feature. People can enter geographical searches. The search box will return a
       // pick list containing a mix of places and predicted search terms.
-
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
       //<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkQ_odFlqZUdLfkz48ElllUvknnASu8NY&libraries=places">
-
       function initAutocomplete() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 37.7749, lng: -122.4194},
           zoom: 13,
           mapTypeId: 'roadmap'
         });
-
         // Create the search box and link it to the UI element.
         var input1 = document.getElementById('pac-input1');
         var input2 = document.getElementById('pac-input2');
-
         var searchBox1 = new google.maps.places.SearchBox(input1);
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input1);
         var searchBox2 = new google.maps.places.SearchBox(input2);
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input2);
-
         //Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
         searchBox1.setBounds(map.getBounds());
@@ -96,11 +102,7 @@
         map.addListener('bounds_changed', function() {
         searchBox2.setBounds(map.getBounds());
         });
-
-
-
         var places = new Array();
-
         var markers = [];
         // Listen for the event fired when the user selects a prediction and retrieve
         // more details for that place.
@@ -109,8 +111,6 @@
           var place2 = searchBox2.getPlaces();
           console.log("get places");
           locations = [];
-
-
           if (place1.length == 0 || place2.length==0) {
             return;
           }
@@ -119,7 +119,6 @@
           locations.push(place1[0].geometry.location);
           locations.push(midpt);
           locations.push(place2[0].geometry.location);
-
           // Clear out the old markers.
           markers.forEach(function(marker) {
             marker.setMap(null);
@@ -134,7 +133,6 @@
           //places.push(midpt)
           places.push(place2[0]);
           console.log(locations.length);
-
           locations.forEach(function(loc) {
             console.log('one');
             console.log(loc.lat());
@@ -142,8 +140,6 @@
               console.log("Returned place contains no geometry");
               return;
             }
-
-
             /*var icon = {
               url: place1[0].icon,
               size: new google.maps.Size(71, 71),
@@ -151,42 +147,31 @@
               anchor: new google.maps.Point(17, 34),
               scaledSize: new google.maps.Size(25, 25)
             };*/
-
             // Create a marker for each place.
             markers.push(new google.maps.Marker({
               map: map,
               //icon: icon,
               title: place1[0].name,
               position: loc
-
             }));
-
-
           });
-
           bounds.extend(place1[0].geometry.location);
           bounds.extend(place2[0].geometry.location);
             
           map.fitBounds(bounds);
-
           //get midpoint of two locations
-
         });
-
-
-
         
-
       }
-
       function getMidpoint(loc1, loc2){
         var lat = (loc1.lat()+loc2.lat()) /2;
         var lng = (loc1.lng()+loc2.lng()) /2;
         return new google.maps.LatLng(lat,lng);
       }
-
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkQ_odFlqZUdLfkz48ElllUvknnASu8NY&libraries=places&callback=initAutocomplete"
          async defer></script>
   </body>
 </html>
+Contact GitHub API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Status Help
