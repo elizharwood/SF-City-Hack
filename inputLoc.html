@@ -84,8 +84,8 @@
 
     var map;
 
-    var lats;
-    var longs;
+    var lats=new Array();
+    var longs=new Array();
 
       // This example adds a search box to a map, using the Google Place Autocomplete
       // feature. People can enter geographical searches. The search box will return a
@@ -149,8 +149,8 @@
           locations.forEach(function(loc) {
 
           //populate lats and longs global arrays
-          lats.push(loc.lat());
-          longs.push(loc.long());
+            lats.push(loc.lat());
+            longs.push(loc.lng());
 
             console.log('one');
             console.log(loc.lat());
